@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>MoodTracking.Shared</RootNamespace>
+    <AssemblyName>MoodTracking.Shared</AssemblyName>
+    <Description>Shared DTOs and contracts for MoodTracking system</Description>
+    <Authors>HappinessMeter Team</Authors>
+    <Company>Your Organization</Company>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>
