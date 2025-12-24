@@ -17,6 +17,10 @@
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}">
 
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
+
     <Border Background="White"
             CornerRadius="15"
             BorderBrush="#E0E0E0"
@@ -174,8 +178,4 @@
             </Border>
         </Grid>
     </Border>
-
-    <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-    </Window.Resources>
 </Window>
