@@ -9,7 +9,6 @@
     <LangVersion>latest</LangVersion>
     <RootNamespace>MoodDesktopApp</RootNamespace>
     <AssemblyName>MoodDesktopApp</AssemblyName>
-    <ApplicationIcon>Assets\Icons\app.ico</ApplicationIcon>
     <Description>HappinessMeter - Employee Mood Tracking Desktop Application</Description>
     <Company>Your Organization</Company>
     <Authors>HappinessMeter Team</Authors>
@@ -57,13 +56,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MoodTracking.Shared\MoodTracking.Shared.csproj" />
-  </ItemGroup>
-
-  <!-- Icon resources -->
-  <ItemGroup>
-    <None Update="Assets\Icons\app.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <!-- Configuration files -->
