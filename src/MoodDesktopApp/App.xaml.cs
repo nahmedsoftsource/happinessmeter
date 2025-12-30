@@ -55,6 +55,8 @@ public partial class App : Application
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
             .CreateLogger();
 
+        Log.Information("HappinessMeter application starting...");
+
         // Build host
         _host = Host.CreateDefaultBuilder()
             .UseSerilog()
@@ -66,6 +68,16 @@ public partial class App : Application
 
         Services = _host.Services;
 
+        // Check if we should prompt the user
+        var submissionTracker = Services.GetRequiredService<ISubmissionTracker>();
+
+        if (!submissionTracker.ShouldPromptUser())
+        {
+            Log.Information("Not prompting user (outside office hours or already submitted today)");
+            Shutdown();
+            return;
+        }
+
         // Start background services
         _host.StartAsync();
 
@@ -73,7 +85,7 @@ public partial class App : Application
         var mainWindow = Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
 
-        Log.Information("HappinessMeter application started");
+        Log.Information("HappinessMeter window displayed");
     }
 
     private void ConfigureServices(IServiceCollection services, IConfiguration configuration)
@@ -83,6 +95,9 @@ public partial class App : Application
 
         // System info service
         services.AddSingleton<ISystemInfoService, SystemInfoService>();
+
+        // Submission tracker (checks office hours and 24-hour cooldown)
+        services.AddSingleton<ISubmissionTracker, SubmissionTracker>();
 
         // Offline queue service (SQLite)
         services.AddSingleton<IOfflineQueueService, OfflineQueueService>();
@@ -170,12 +185,8 @@ public partial class App : Application
 
         if (!createdNew)
         {
-            // Another instance is already running
-            MessageBox.Show(
-                "HappinessMeter is already running.",
-                "HappinessMeter",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            // Another instance is already running - exit silently
+            Log.Information("Another instance is already running");
             return false;
         }
 

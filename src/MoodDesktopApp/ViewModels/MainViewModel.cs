@@ -15,6 +15,7 @@ public partial class MainViewModel : ObservableObject
     private readonly IMoodApiClient _apiClient;
     private readonly ISystemInfoService _systemInfo;
     private readonly IOfflineQueueService _offlineQueue;
+    private readonly ISubmissionTracker _submissionTracker;
     private readonly ILogger<MainViewModel> _logger;
     private readonly DispatcherTimer _closeTimer;
 
@@ -24,17 +25,19 @@ public partial class MainViewModel : ObservableObject
         IMoodApiClient apiClient,
         ISystemInfoService systemInfo,
         IOfflineQueueService offlineQueue,
+        ISubmissionTracker submissionTracker,
         ILogger<MainViewModel> logger)
     {
         _apiClient = apiClient;
         _systemInfo = systemInfo;
         _offlineQueue = offlineQueue;
+        _submissionTracker = submissionTracker;
         _logger = logger;
 
-        // Initialize timer for auto-close after confirmation
+        // Initialize timer for auto-close after confirmation (2 seconds)
         _closeTimer = new DispatcherTimer
         {
-            Interval = TimeSpan.FromSeconds(3)
+            Interval = TimeSpan.FromSeconds(2)
         };
         _closeTimer.Tick += (s, e) =>
         {
@@ -102,6 +105,10 @@ public partial class MainViewModel : ObservableObject
             if (result.Success)
             {
                 _logger.LogInformation("Mood {Mood} submitted successfully", mood);
+
+                // Record submission to prevent re-prompting for 24 hours
+                _submissionTracker.RecordSubmission();
+
                 ShowSuccessConfirmation(result.Message ?? GetDefaultMessage(mood));
             }
             else
@@ -109,6 +116,10 @@ public partial class MainViewModel : ObservableObject
                 // Save offline for later sync
                 _logger.LogWarning("API submission failed, saving offline: {Error}", result.ErrorMessage);
                 await SaveOfflineAsync(request);
+
+                // Still record submission even if offline (will sync later)
+                _submissionTracker.RecordSubmission();
+
                 ShowOfflineConfirmation(mood);
             }
         }
@@ -126,6 +137,10 @@ public partial class MainViewModel : ObservableObject
                 AppVersion = _systemInfo.AppVersion,
                 OSVersion = _systemInfo.OSVersion
             });
+
+            // Still record submission even on error (will sync later)
+            _submissionTracker.RecordSubmission();
+
             ShowOfflineConfirmation(mood);
         }
         finally
