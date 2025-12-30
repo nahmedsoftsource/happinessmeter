@@ -68,6 +68,10 @@ public partial class App : Application
 
         Services = _host.Services;
 
+        // Ensure auto-start is configured (registers in Windows Registry on first run)
+        var autoStartService = Services.GetRequiredService<IAutoStartService>();
+        autoStartService.EnsureAutoStartConfigured();
+
         // Check if we should prompt the user
         var submissionTracker = Services.GetRequiredService<ISubmissionTracker>();
 
@@ -95,6 +99,9 @@ public partial class App : Application
 
         // System info service
         services.AddSingleton<ISystemInfoService, SystemInfoService>();
+
+        // Auto-start service (registers app to run at Windows login)
+        services.AddSingleton<IAutoStartService, AutoStartService>();
 
         // Submission tracker (checks office hours and 24-hour cooldown)
         services.AddSingleton<ISubmissionTracker, SubmissionTracker>();
