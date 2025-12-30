@@ -62,15 +62,17 @@ public class SubmissionTracker : ISubmissionTracker
 
         // Read schedule configuration with defaults
         var officeStartHour = configuration.GetValue("Schedule:OfficeStartHour", 8);
+        var officeStartMinute = configuration.GetValue("Schedule:OfficeStartMinute", 0);
         var officeEndHour = configuration.GetValue("Schedule:OfficeEndHour", 17);
+        var officeEndMinute = configuration.GetValue("Schedule:OfficeEndMinute", 0);
         _cooldownHours = configuration.GetValue("Schedule:CooldownHours", 24);
 
-        _officeStartTime = new TimeSpan(officeStartHour, 0, 0);
-        _officeEndTime = new TimeSpan(officeEndHour, 0, 0);
+        _officeStartTime = new TimeSpan(officeStartHour, officeStartMinute, 0);
+        _officeEndTime = new TimeSpan(officeEndHour, officeEndMinute, 0);
 
         _logger.LogInformation(
-            "Schedule configured: Office hours {Start}:00 - {End}:00, Cooldown: {Cooldown} hours",
-            officeStartHour, officeEndHour, _cooldownHours);
+            "Schedule configured: Office hours {Start} - {End}, Cooldown: {Cooldown} hours",
+            _officeStartTime.ToString(@"hh\:mm"), _officeEndTime.ToString(@"hh\:mm"), _cooldownHours);
 
         var appDataPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -135,13 +137,20 @@ public class SubmissionTracker : ISubmissionTracker
     /// </summary>
     public string GetOfficeHoursDisplay()
     {
-        var startHour = _officeStartTime.Hours;
-        var endHour = _officeEndTime.Hours;
-        var startPeriod = startHour >= 12 ? "PM" : "AM";
-        var endPeriod = endHour >= 12 ? "PM" : "AM";
-        var displayStart = startHour > 12 ? startHour - 12 : (startHour == 0 ? 12 : startHour);
-        var displayEnd = endHour > 12 ? endHour - 12 : (endHour == 0 ? 12 : endHour);
-        return $"{displayStart}{startPeriod} to {displayEnd}{endPeriod}";
+        return $"{FormatTime(_officeStartTime)} to {FormatTime(_officeEndTime)}";
+    }
+
+    private static string FormatTime(TimeSpan time)
+    {
+        var hour = time.Hours;
+        var minute = time.Minutes;
+        var period = hour >= 12 ? "PM" : "AM";
+        var displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
+
+        if (minute == 0)
+            return $"{displayHour}{period}";
+        else
+            return $"{displayHour}:{minute:D2}{period}";
     }
 
     /// <summary>
