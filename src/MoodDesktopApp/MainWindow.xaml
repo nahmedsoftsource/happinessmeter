@@ -33,6 +33,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -87,31 +88,27 @@
                            Margin="0,8,0,0"/>
             </StackPanel>
 
-            <!-- Mood Buttons / Confirmation -->
-            <Grid Grid.Row="2">
-                <!-- Status Message (Outside office hours or already submitted) -->
-                <StackPanel VerticalAlignment="Top"
-                            HorizontalAlignment="Center"
-                            Margin="20,0,20,10"
-                            Visibility="{Binding ShowStatusMessage, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Border Background="#FFF8E1"
-                            CornerRadius="8"
-                            Padding="15,10"
-                            BorderBrush="#FFE082"
-                            BorderThickness="1">
-                        <StackPanel>
-                            <TextBlock Text="&#128337;" FontSize="28" HorizontalAlignment="Center" Margin="0,0,0,8"/>
-                            <TextBlock Text="{Binding StatusMessage}"
-                                       FontSize="14"
-                                       TextWrapping="Wrap"
-                                       TextAlignment="Center"
-                                       Foreground="#5D4037"
-                                       MaxWidth="320"/>
-                        </StackPanel>
-                    </Border>
+            <!-- Status Message (Outside office hours or already submitted) -->
+            <Border Grid.Row="2"
+                    Background="#FFF8E1"
+                    CornerRadius="8"
+                    Padding="15,10"
+                    Margin="30,0,30,15"
+                    BorderBrush="#FFE082"
+                    BorderThickness="1"
+                    Visibility="{Binding ShowStatusMessage, Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel>
+                    <TextBlock Text="&#9200;" FontSize="24" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding StatusMessage}"
+                               FontSize="13"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               Foreground="#5D4037"/>
                 </StackPanel>
+            </Border>
 
-                <!-- Mood Selection -->
+            <!-- Mood Buttons / Confirmation -->
+            <Grid Grid.Row="3">
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -191,7 +188,7 @@
             </Grid>
 
             <!-- Footer -->
-            <Border Grid.Row="3" Background="#FAFAFA" CornerRadius="0,0,15,15">
+            <Border Grid.Row="4" Background="#FAFAFA" CornerRadius="0,0,15,15">
                 <TextBlock Text="{Binding UserInfo}"
                            FontSize="11"
                            Foreground="#9E9E9E"
