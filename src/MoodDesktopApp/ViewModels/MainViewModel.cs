@@ -48,6 +48,29 @@ public partial class MainViewModel : ObservableObject
         // Set initial values
         UpdateGreeting();
         UserInfo = $"{_systemInfo.Domain}\\{_systemInfo.Username} on {_systemInfo.MachineName}";
+
+        // Check availability status
+        CheckAvailabilityStatus();
+    }
+
+    private void CheckAvailabilityStatus()
+    {
+        IsWithinOfficeHours = _submissionTracker.IsWithinOfficeHours();
+        HasAlreadySubmitted = _submissionTracker.HasSubmittedRecently();
+
+        if (!IsWithinOfficeHours)
+        {
+            var officeHours = _submissionTracker.GetOfficeHoursDisplay();
+            StatusMessage = $"This service is available during office hours only ({officeHours}).";
+            ShowMoodButtons = true; // Show but disabled
+            _logger.LogInformation("Outside office hours - buttons disabled");
+        }
+        else if (HasAlreadySubmitted)
+        {
+            StatusMessage = "Thank you! You have already submitted your mood today. Please come back tomorrow.";
+            ShowMoodButtons = true; // Show but disabled
+            _logger.LogInformation("Already submitted today - buttons disabled");
+        }
     }
 
     [ObservableProperty]
@@ -71,7 +94,18 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool _isOffline;
 
-    public bool CanSelectMood => !IsLoading;
+    [ObservableProperty]
+    private bool _isWithinOfficeHours = true;
+
+    [ObservableProperty]
+    private bool _hasAlreadySubmitted;
+
+    [ObservableProperty]
+    private string _statusMessage = string.Empty;
+
+    public bool CanSelectMood => !IsLoading && IsWithinOfficeHours && !HasAlreadySubmitted;
+
+    public bool ShowStatusMessage => !IsWithinOfficeHours || HasAlreadySubmitted;
 
     [RelayCommand]
     private async Task SelectMoodAsync(string moodString)

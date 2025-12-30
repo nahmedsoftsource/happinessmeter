@@ -89,6 +89,28 @@
 
             <!-- Mood Buttons / Confirmation -->
             <Grid Grid.Row="2">
+                <!-- Status Message (Outside office hours or already submitted) -->
+                <StackPanel VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Margin="20,0,20,10"
+                            Visibility="{Binding ShowStatusMessage, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Border Background="#FFF8E1"
+                            CornerRadius="8"
+                            Padding="15,10"
+                            BorderBrush="#FFE082"
+                            BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="&#128337;" FontSize="28" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                            <TextBlock Text="{Binding StatusMessage}"
+                                       FontSize="14"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Center"
+                                       Foreground="#5D4037"
+                                       MaxWidth="320"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
                 <!-- Mood Selection -->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center"

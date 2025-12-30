@@ -17,6 +17,21 @@ public interface ISubmissionTracker
     bool ShouldPromptUser();
 
     /// <summary>
+    /// Checks if current time is within configured office hours.
+    /// </summary>
+    bool IsWithinOfficeHours();
+
+    /// <summary>
+    /// Checks if user has submitted within the cooldown period.
+    /// </summary>
+    bool HasSubmittedRecently();
+
+    /// <summary>
+    /// Gets the configured office hours as a formatted string.
+    /// </summary>
+    string GetOfficeHoursDisplay();
+
+    /// <summary>
     /// Records that a mood was submitted.
     /// </summary>
     void RecordSubmission();
@@ -70,10 +85,16 @@ public class SubmissionTracker : ISubmissionTracker
     /// </summary>
     public bool ShouldPromptUser()
     {
-        var now = DateTime.Now;
-        var currentTime = now.TimeOfDay;
+        return IsWithinOfficeHours() && !HasSubmittedRecently();
+    }
 
-        // Check 1: Is it within office hours?
+    /// <summary>
+    /// Checks if current time is within configured office hours.
+    /// </summary>
+    public bool IsWithinOfficeHours()
+    {
+        var currentTime = DateTime.Now.TimeOfDay;
+
         if (currentTime < _officeStartTime || currentTime > _officeEndTime)
         {
             _logger.LogInformation(
@@ -84,30 +105,43 @@ public class SubmissionTracker : ISubmissionTracker
             return false;
         }
 
-        // Check 2: Is it a weekday? (Optional - uncomment to skip weekends)
-        // if (now.DayOfWeek == DayOfWeek.Saturday || now.DayOfWeek == DayOfWeek.Sunday)
-        // {
-        //     _logger.LogInformation("Weekend - not prompting");
-        //     return false;
-        // }
+        return true;
+    }
 
-        // Check 3: Has user already submitted within the cooldown period?
+    /// <summary>
+    /// Checks if user has submitted within the cooldown period.
+    /// </summary>
+    public bool HasSubmittedRecently()
+    {
         var lastSubmission = GetLastSubmissionTime();
         if (lastSubmission.HasValue)
         {
-            var hoursSinceLastSubmission = (now - lastSubmission.Value).TotalHours;
+            var hoursSinceLastSubmission = (DateTime.Now - lastSubmission.Value).TotalHours;
             if (hoursSinceLastSubmission < _cooldownHours)
             {
                 _logger.LogInformation(
                     "Already submitted {Hours:F1} hours ago. Cooldown: {Cooldown} hours",
                     hoursSinceLastSubmission,
                     _cooldownHours);
-                return false;
+                return true;
             }
         }
 
-        _logger.LogInformation("User should be prompted for mood");
-        return true;
+        return false;
+    }
+
+    /// <summary>
+    /// Gets the configured office hours as a formatted string.
+    /// </summary>
+    public string GetOfficeHoursDisplay()
+    {
+        var startHour = _officeStartTime.Hours;
+        var endHour = _officeEndTime.Hours;
+        var startPeriod = startHour >= 12 ? "PM" : "AM";
+        var endPeriod = endHour >= 12 ? "PM" : "AM";
+        var displayStart = startHour > 12 ? startHour - 12 : (startHour == 0 ? 12 : startHour);
+        var displayEnd = endHour > 12 ? endHour - 12 : (endHour == 0 ? 12 : endHour);
+        return $"{displayStart}{startPeriod} to {displayEnd}{endPeriod}";
     }
 
     /// <summary>

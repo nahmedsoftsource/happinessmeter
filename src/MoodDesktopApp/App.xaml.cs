@@ -72,16 +72,6 @@ public partial class App : Application
         var autoStartService = Services.GetRequiredService<IAutoStartService>();
         autoStartService.EnsureAutoStartConfigured();
 
-        // Check if we should prompt the user
-        var submissionTracker = Services.GetRequiredService<ISubmissionTracker>();
-
-        if (!submissionTracker.ShouldPromptUser())
-        {
-            Log.Information("Not prompting user (outside office hours or already submitted today)");
-            Shutdown();
-            return;
-        }
-
         // Start background services
         _host.StartAsync();
 
