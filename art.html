@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art - Josh Warner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/art.css">
+</head>
+<body class="art-page">
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo">
+            <div class="logo-circle">JW</div>
+            <span>Josh Warner</span>
+        </div>
+        <nav>
+            <a href="index.html">Projects</a>
+            <a href="art.html" class="active">Art</a>
+            <a href="info.html">Info</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Art Hero -->
+    <section class="art-hero">
+        <h1 class="art-title">Art & Personal Work</h1>
+        <p class="art-description">
+            A collection of personal artwork and experimental pieces created using Cinema 4D, Redshift, and various other tools. These works explore themes of light, space, and digital abstraction.
+        </p>
+
+        <!-- Filter Tags -->
+        <div class="art-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="3d">3D Art</button>
+            <button class="filter-btn" data-filter="typography">Typography</button>
+            <button class="filter-btn" data-filter="abstract">Abstract</button>
+            <button class="filter-btn" data-filter="experimental">Experimental</button>
+        </div>
+    </section>
+
+    <!-- Art Gallery Grid -->
+    <section class="art-gallery">
+        <div class="gallery-grid">
+            <!-- Art Item 1 -->
+            <div class="art-item" data-category="3d" data-index="0">
+                <div class="art-image">
+                    <img src="art/art-1.jpg" alt="3D Abstract Sculpture" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Luminescence</h3>
+                    <span class="art-category">3D Art</span>
+                </div>
+            </div>
+
+            <!-- Art Item 2 -->
+            <div class="art-item large" data-category="abstract" data-index="1">
+                <div class="art-image">
+                    <img src="art/art-2.jpg" alt="Abstract Light Study" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Light Study #03</h3>
+                    <span class="art-category">Abstract</span>
+                </div>
+            </div>
+
+            <!-- Art Item 3 -->
+            <div class="art-item" data-category="typography" data-index="2">
+                <div class="art-image">
+                    <img src="art/art-3.jpg" alt="Custom Typography" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Type Experiment</h3>
+                    <span class="art-category">Typography</span>
+                </div>
+            </div>
+
+            <!-- Art Item 4 -->
+            <div class="art-item" data-category="3d" data-index="3">
+                <div class="art-image">
+                    <img src="art/art-4.jpg" alt="3D Geometric Forms" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Geometric Dreams</h3>
+                    <span class="art-category">3D Art</span>
+                </div>
+            </div>
+
+            <!-- Art Item 5 -->
+            <div class="art-item" data-category="experimental" data-index="4">
+                <div class="art-image">
+                    <img src="art/art-5.jpg" alt="Experimental Digital Art" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Digital Erosion</h3>
+                    <span class="art-category">Experimental</span>
+                </div>
+            </div>
+
+            <!-- Art Item 6 -->
+            <div class="art-item large" data-category="3d" data-index="5">
+                <div class="art-image">
+                    <img src="art/art-6.jpg" alt="3D Environment" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Ethereal Space</h3>
+                    <span class="art-category">3D Art</span>
+                </div>
+            </div>
+
+            <!-- Art Item 7 -->
+            <div class="art-item" data-category="typography" data-index="6">
+                <div class="art-image">
+                    <img src="art/art-7.jpg" alt="Kinetic Typography" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Motion Type</h3>
+                    <span class="art-category">Typography</span>
+                </div>
+            </div>
+
+            <!-- Art Item 8 -->
+            <div class="art-item" data-category="abstract" data-index="7">
+                <div class="art-image">
+                    <img src="art/art-8.jpg" alt="Abstract Composition" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Fragments</h3>
+                    <span class="art-category">Abstract</span>
+                </div>
+            </div>
+
+            <!-- Art Item 9 -->
+            <div class="art-item" data-category="experimental" data-index="8">
+                <div class="art-image">
+                    <img src="art/art-9.jpg" alt="Glitch Art" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Signal Decay</h3>
+                    <span class="art-category">Experimental</span>
+                </div>
+            </div>
+
+            <!-- Art Item 10 -->
+            <div class="art-item large" data-category="3d" data-index="9">
+                <div class="art-image">
+                    <img src="art/art-10.jpg" alt="3D Character Study" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Digital Being</h3>
+                    <span class="art-category">3D Art</span>
+                </div>
+            </div>
+
+            <!-- Art Item 11 -->
+            <div class="art-item" data-category="abstract" data-index="10">
+                <div class="art-image">
+                    <img src="art/art-11.jpg" alt="Color Study" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Chromatic Shift</h3>
+                    <span class="art-category">Abstract</span>
+                </div>
+            </div>
+
+            <!-- Art Item 12 -->
+            <div class="art-item" data-category="typography" data-index="11">
+                <div class="art-image">
+                    <img src="art/art-12.jpg" alt="3D Typography" loading="lazy">
+                    <div class="art-overlay">
+                        <span class="art-view">View</span>
+                    </div>
+                </div>
+                <div class="art-info">
+                    <h3>Dimensional Type</h3>
+                    <span class="art-category">Typography</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Art Lightbox Modal -->
+    <div class="lightbox" id="artLightbox">
+        <div class="lightbox-overlay"></div>
+        <div class="lightbox-container">
+            <button class="lightbox-close" aria-label="Close">&times;</button>
+            <button class="lightbox-nav lightbox-prev" aria-label="Previous">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <div class="lightbox-content">
+                <img src="" alt="" class="lightbox-image">
+            </div>
+            <button class="lightbox-nav lightbox-next" aria-label="Next">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+            <div class="lightbox-info">
+                <h3 class="lightbox-title"></h3>
+                <span class="lightbox-category"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    Available for hire
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Location</h4>
+                <p>Redding, California</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <a href="mailto:hello@narrators.co">hello@narrators.co</a>
+            </div>
+
+            <div class="footer-section">
+                <h4>Social</h4>
+                <a href="https://instagram.com/joshwarner.art" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://twitter.com/iamjoshwarner" target="_blank" rel="noopener">Twitter</a>
+                <a href="https://dribbble.com/joshwarner" target="_blank" rel="noopener">Dribbble</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/art.js"></script>
+</body>
+</html>
