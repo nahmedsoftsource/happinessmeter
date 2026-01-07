@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:MoodDesktopApp.ViewModels"
         mc:Ignorable="d"
-        Title="HappinessMeter"
-        Height="350" Width="450"
+        Title="MoodTrack"
+        Height="380" Width="780"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -45,7 +45,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="HappinessMeter"
+                <TextBlock Text="MoodTrack"
                            VerticalAlignment="Center"
                            Margin="15,0,0,0"
                            FontSize="14"
@@ -75,15 +75,15 @@
             </Grid>
 
             <!-- Question -->
-            <StackPanel Grid.Row="1" Margin="20,25,20,15">
+            <StackPanel Grid.Row="1" Margin="20,20,20,10">
                 <TextBlock Text="{Binding Greeting}"
-                           FontSize="14"
-                           Foreground="#757575"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="How are you feeling today?"
-                           FontSize="22"
-                           FontWeight="SemiBold"
+                           FontSize="24"
+                           FontWeight="Bold"
                            Foreground="#212121"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="How are you feeling?"
+                           FontSize="16"
+                           Foreground="#757575"
                            HorizontalAlignment="Center"
                            Margin="0,8,0,0"/>
             </StackPanel>
@@ -109,44 +109,93 @@
 
             <!-- Mood Buttons / Confirmation -->
             <Grid Grid.Row="3">
+                <!-- Mood Selection -->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Visibility="{Binding ShowMoodButtons, Converter={StaticResource BoolToVisibilityConverter}}">
 
-                    <!-- Happy Button -->
+                    <!-- So Happy Button -->
                     <Button Style="{StaticResource MoodButtonStyle}"
-                            Background="{StaticResource HappyBrush}"
+                            Background="{StaticResource SoHappyBrush}"
                             Command="{Binding SelectMoodCommand}"
-                            CommandParameter="Happy"
+                            CommandParameter="SoHappy"
                             IsEnabled="{Binding CanSelectMood}">
                         <StackPanel>
-                            <TextBlock Text="&#128512;" FontSize="36" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Happy" Margin="0,5,0,0"/>
+                            <TextBlock Text="&#128513;" FontSize="32" HorizontalAlignment="Center"/>
+                            <TextBlock Text="So Happy" Margin="0,5,0,0" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <!-- Unhappy Button -->
+                    <!-- Very Busy Button -->
                     <Button Style="{StaticResource MoodButtonStyle}"
-                            Background="{StaticResource UnhappyBrush}"
+                            Background="{StaticResource VeryBusyBrush}"
                             Command="{Binding SelectMoodCommand}"
-                            CommandParameter="Unhappy"
+                            CommandParameter="VeryBusy"
                             IsEnabled="{Binding CanSelectMood}">
                         <StackPanel>
-                            <TextBlock Text="&#128528;" FontSize="36" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Unhappy" Margin="0,5,0,0"/>
+                            <TextBlock Text="&#128104;&#8205;&#128187;" FontSize="32" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Very Busy" Margin="0,5,0,0" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <!-- Sad Button -->
+                    <!-- Positive Energy Button -->
                     <Button Style="{StaticResource MoodButtonStyle}"
-                            Background="{StaticResource SadBrush}"
+                            Background="{StaticResource PositiveEnergyBrush}"
                             Command="{Binding SelectMoodCommand}"
-                            CommandParameter="Sad"
+                            CommandParameter="PositiveEnergy"
                             IsEnabled="{Binding CanSelectMood}">
                         <StackPanel>
-                            <TextBlock Text="&#128546;" FontSize="36" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Sad" Margin="0,5,0,0"/>
+                            <TextBlock Text="&#9889;" FontSize="32" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Positive Energy" Margin="0,5,0,0" HorizontalAlignment="Center" FontSize="10"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Not in Mood Button -->
+                    <Button Style="{StaticResource MoodButtonStyle}"
+                            Background="{StaticResource NotInMoodBrush}"
+                            Command="{Binding SelectMoodCommand}"
+                            CommandParameter="NotInMood"
+                            IsEnabled="{Binding CanSelectMood}">
+                        <StackPanel>
+                            <TextBlock Text="&#128533;" FontSize="32" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Not in Mood" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Hungry Button -->
+                    <Button Style="{StaticResource MoodButtonStyle}"
+                            Background="{StaticResource HungryBrush}"
+                            Command="{Binding SelectMoodCommand}"
+                            CommandParameter="Hungry"
+                            IsEnabled="{Binding CanSelectMood}">
+                        <StackPanel>
+                            <TextBlock Text="&#127828;" FontSize="32" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Hungry" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Grumpy Button -->
+                    <Button Style="{StaticResource MoodButtonStyle}"
+                            Background="{StaticResource GrumpyBrush}"
+                            Command="{Binding SelectMoodCommand}"
+                            CommandParameter="Grumpy"
+                            IsEnabled="{Binding CanSelectMood}">
+                        <StackPanel>
+                            <TextBlock Text="&#129314;" FontSize="32" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Grumpy" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Sleepy Button -->
+                    <Button Style="{StaticResource MoodButtonStyle}"
+                            Background="{StaticResource SleepyBrush}"
+                            Command="{Binding SelectMoodCommand}"
+                            CommandParameter="Sleepy"
+                            IsEnabled="{Binding CanSelectMood}">
+                        <StackPanel>
+                            <TextBlock Text="&#128564;" FontSize="32" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Sleepy" Margin="0,5,0,0" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -162,7 +211,7 @@
                                TextAlignment="Center"
                                Foreground="#424242"
                                Margin="20,10,20,0"
-                               MaxWidth="350"/>
+                               MaxWidth="500"/>
                 </StackPanel>
 
                 <!-- Loading Indicator -->

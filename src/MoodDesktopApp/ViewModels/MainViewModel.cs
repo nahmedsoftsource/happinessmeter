@@ -214,20 +214,13 @@ public partial class MainViewModel : ObservableObject
 
     private void UpdateGreeting()
     {
-        var hour = DateTime.Now.Hour;
         var firstName = GetFirstName(_systemInfo.Username);
-
-        Greeting = hour switch
-        {
-            < 12 => $"Good morning, {firstName}!",
-            < 17 => $"Good afternoon, {firstName}!",
-            _ => $"Good evening, {firstName}!"
-        };
+        Greeting = $"Hello, {firstName}";
     }
 
     private static string GetFirstName(string username)
     {
-        // Try to extract first name from username (e.g., "jsmith" -> "J")
+        // Try to extract first name from username (e.g., "jsmith" -> "Jsmith")
         if (string.IsNullOrEmpty(username))
             return "there";
 
@@ -239,9 +232,13 @@ public partial class MainViewModel : ObservableObject
     {
         return mood switch
         {
-            MoodType.Happy => "Great to hear you're feeling happy! Have a wonderful day!",
-            MoodType.Unhappy => "Thank you for sharing. We hope things improve for you.",
-            MoodType.Sad => "We're sorry to hear that. Your feedback is appreciated.",
+            MoodType.SoHappy => "Awesome! Great to hear you're feeling so happy! Keep spreading the joy!",
+            MoodType.VeryBusy => "Thanks for letting us know! Stay focused and productive!",
+            MoodType.PositiveEnergy => "Fantastic! Your positive energy is contagious! Keep it up!",
+            MoodType.NotInMood => "Thank you for sharing. We hope things get better soon.",
+            MoodType.Hungry => "Time for a snack break! Don't forget to refuel!",
+            MoodType.Grumpy => "We understand. Hope your day improves!",
+            MoodType.Sleepy => "Maybe grab a coffee! Thanks for checking in despite being tired.",
             _ => "Thank you for sharing your mood!"
         };
     }

@@ -7,48 +7,63 @@
         <ResourceDictionary>
             <!-- Colors -->
             <Color x:Key="PrimaryColor">#2196F3</Color>
-            <Color x:Key="HappyColor">#4CAF50</Color>
-            <Color x:Key="UnhappyColor">#FF9800</Color>
-            <Color x:Key="SadColor">#F44336</Color>
             <Color x:Key="BackgroundColor">#FFFFFF</Color>
             <Color x:Key="TextColor">#212121</Color>
             <Color x:Key="SecondaryTextColor">#757575</Color>
 
+            <!-- Mood Colors (matching screenshot style - light/pastel) -->
+            <Color x:Key="SoHappyColor">#FFF9C4</Color>
+            <Color x:Key="VeryBusyColor">#BBDEFB</Color>
+            <Color x:Key="PositiveEnergyColor">#FFF8E1</Color>
+            <Color x:Key="NotInMoodColor">#F5F5F5</Color>
+            <Color x:Key="HungryColor">#FFECB3</Color>
+            <Color x:Key="GrumpyColor">#C8E6C9</Color>
+            <Color x:Key="SleepyColor">#FFF3E0</Color>
+
             <!-- Brushes -->
             <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
-            <SolidColorBrush x:Key="HappyBrush" Color="{StaticResource HappyColor}"/>
-            <SolidColorBrush x:Key="UnhappyBrush" Color="{StaticResource UnhappyColor}"/>
-            <SolidColorBrush x:Key="SadBrush" Color="{StaticResource SadColor}"/>
             <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}"/>
             <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}"/>
             <SolidColorBrush x:Key="SecondaryTextBrush" Color="{StaticResource SecondaryTextColor}"/>
 
-            <!-- Button Style -->
+            <!-- Mood Brushes -->
+            <SolidColorBrush x:Key="SoHappyBrush" Color="{StaticResource SoHappyColor}"/>
+            <SolidColorBrush x:Key="VeryBusyBrush" Color="{StaticResource VeryBusyColor}"/>
+            <SolidColorBrush x:Key="PositiveEnergyBrush" Color="{StaticResource PositiveEnergyColor}"/>
+            <SolidColorBrush x:Key="NotInMoodBrush" Color="{StaticResource NotInMoodColor}"/>
+            <SolidColorBrush x:Key="HungryBrush" Color="{StaticResource HungryColor}"/>
+            <SolidColorBrush x:Key="GrumpyBrush" Color="{StaticResource GrumpyColor}"/>
+            <SolidColorBrush x:Key="SleepyBrush" Color="{StaticResource SleepyColor}"/>
+
+            <!-- Mood Button Style (smaller for 7 buttons) -->
             <Style x:Key="MoodButtonStyle" TargetType="Button">
-                <Setter Property="Width" Value="120"/>
-                <Setter Property="Height" Value="100"/>
-                <Setter Property="Margin" Value="10"/>
-                <Setter Property="FontSize" Value="16"/>
-                <Setter Property="FontWeight" Value="SemiBold"/>
-                <Setter Property="Foreground" Value="White"/>
-                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Width" Value="95"/>
+                <Setter Property="Height" Value="95"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Foreground" Value="#424242"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="#E0E0E0"/>
                 <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
                             <Border x:Name="border"
                                     Background="{TemplateBinding Background}"
-                                    CornerRadius="10"
-                                    BorderThickness="0">
+                                    CornerRadius="12"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    BorderBrush="{TemplateBinding BorderBrush}">
                                 <ContentPresenter HorizontalAlignment="Center"
                                                   VerticalAlignment="Center"/>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#2196F3"/>
+                                    <Setter TargetName="border" Property="BorderThickness" Value="2"/>
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="border" Property="Opacity" Value="0.7"/>
+                                    <Setter TargetName="border" Property="Opacity" Value="0.8"/>
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter TargetName="border" Property="Opacity" Value="0.5"/>

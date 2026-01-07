@@ -6,17 +6,37 @@ namespace MoodTracking.Shared.DTOs;
 public enum MoodType
 {
     /// <summary>
-    /// User is feeling happy.
+    /// User is feeling very happy.
     /// </summary>
-    Happy = 1,
+    SoHappy = 1,
 
     /// <summary>
-    /// User is feeling unhappy (neutral/dissatisfied).
+    /// User is very busy working.
     /// </summary>
-    Unhappy = 2,
+    VeryBusy = 2,
 
     /// <summary>
-    /// User is feeling sad.
+    /// User has positive energy.
     /// </summary>
-    Sad = 3
+    PositiveEnergy = 3,
+
+    /// <summary>
+    /// User is not in the mood.
+    /// </summary>
+    NotInMood = 4,
+
+    /// <summary>
+    /// User is feeling hungry.
+    /// </summary>
+    Hungry = 5,
+
+    /// <summary>
+    /// User is feeling grumpy.
+    /// </summary>
+    Grumpy = 6,
+
+    /// <summary>
+    /// User is feeling sleepy.
+    /// </summary>
+    Sleepy = 7
 }
