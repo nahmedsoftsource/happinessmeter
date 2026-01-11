@@ -1,6 +1,6 @@
 /**
  * Josh Warner Portfolio - Main JavaScript
- * PDF Modal, Animations, and Interactions
+ * Behance-style Modal, Animations, and Interactions
  */
 
 (function () {
@@ -14,25 +14,25 @@
             title: 'Libra',
             description: 'A modern public library catalog app integrating physical book checkout, e-readers, audiobooks, and more.',
             tags: ['Product Design', 'Mobile App', 'UX/UI'],
-            pdf: 'uploads/pdfs/libra-casestudy.pdf'
+            images: ['uploads/projects/1.jpg', 'uploads/projects/1-2.jpg', 'uploads/projects/1-3.jpg']
         },
         2: {
             title: 'Energy Dashboard',
             description: 'A comprehensive dashboard for tracking energy from orbital solar satellites.',
             tags: ['Product Design', 'Dashboard', 'Data Visualization'],
-            pdf: 'uploads/pdfs/energy-dashboard.pdf'
+            images: ['uploads/projects/2.jpg', 'uploads/projects/2-2.jpg', 'uploads/projects/2-3.jpg']
         },
         3: {
             title: 'Solar Company Branding',
             description: 'Complete branding and product design for a home solar energy company.',
             tags: ['Branding', 'Graphic Design', 'Identity'],
-            pdf: 'uploads/pdfs/solar-branding.pdf'
+            images: ['uploads/projects/3.jpg', 'uploads/projects/3-2.jpg', 'uploads/projects/3-3.jpg']
         },
         4: {
             title: 'Protocol',
             description: 'A platform that makes it easy for traditional art dealers and galleries to buy and sell art with crypto.',
             tags: ['Product Design', 'Web3', 'Marketplace'],
-            pdf: 'uploads/pdfs/protocol.pdf'
+            images: ['uploads/projects/4.jpg', 'uploads/projects/4-2.jpg', 'uploads/projects/4-3.jpg']
         }
     };
 
@@ -42,18 +42,20 @@
     };
 
     // =============================================
-    // PDF Modal Controller
+    // Behance-style Project Modal Controller
     // =============================================
-    const pdfModalController = {
+    const projectModalController = {
         modal: null,
-        pdfViewer: null,
+        imagesContainer: null,
+        scrollContainer: null,
         currentProject: null,
 
         init: function () {
             this.modal = document.getElementById('projectModal');
             if (!this.modal) return;
 
-            this.pdfViewer = document.getElementById('pdfViewer');
+            this.imagesContainer = document.getElementById('projectImages');
+            this.scrollContainer = this.modal.querySelector('.project-scroll-container');
             this.bindEvents();
         },
 
@@ -112,25 +114,51 @@
                 ).join('');
             }
 
-            // Load PDF
-            if (this.pdfViewer && project.pdf) {
-                // Use Google Docs viewer for better compatibility, or direct PDF
-                this.pdfViewer.src = project.pdf;
-            }
+            // Build images - vertically stacked
+            this.buildImages(project.images || []);
 
             // Show modal
             this.modal.classList.add('active');
             document.body.classList.add('modal-open');
+
+            // Scroll to top of modal
+            if (this.scrollContainer) {
+                this.scrollContainer.scrollTop = 0;
+            }
+        },
+
+        buildImages: function (images) {
+            if (!this.imagesContainer) return;
+
+            if (images.length === 0) {
+                this.imagesContainer.innerHTML = `
+                    <div class="project-image-item">
+                        <div style="padding: 4rem; text-align: center; color: var(--text-muted);">
+                            <p>No images available for this project yet.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            this.imagesContainer.innerHTML = images.map((src, index) => `
+                <div class="project-image-item">
+                    <img src="${src}"
+                         alt="${this.currentProject.title} - Image ${index + 1}"
+                         loading="${index < 2 ? 'eager' : 'lazy'}"
+                         onerror="this.parentElement.style.display='none'">
+                </div>
+            `).join('');
         },
 
         closeModal: function () {
             this.modal.classList.remove('active');
             document.body.classList.remove('modal-open');
 
-            // Clear PDF viewer after animation
+            // Clear images after animation
             setTimeout(() => {
-                if (this.pdfViewer) {
-                    this.pdfViewer.src = '';
+                if (this.imagesContainer) {
+                    this.imagesContainer.innerHTML = '';
                 }
             }, 400);
         }
@@ -282,7 +310,7 @@
     // Initialize Everything
     // =============================================
     document.addEventListener('DOMContentLoaded', function () {
-        pdfModalController.init();
+        projectModalController.init();
         smoothScroll.init();
         scrollAnimations.init();
         parallax.init();

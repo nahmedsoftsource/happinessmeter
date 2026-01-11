@@ -67,13 +67,17 @@ include 'includes/header.php';
     <div class="portfolio-grid" id="projects">
         <?php foreach ($projects as $index => $project):
             $tags = json_decode($project['tags'] ?? '[]', true) ?: [];
+            $galleryImages = $project['gallery_images'] ? explode(',', $project['gallery_images']) : [];
+            if ($project['featured_image'] && !in_array($project['featured_image'], $galleryImages)) {
+                array_unshift($galleryImages, $project['featured_image']);
+            }
         ?>
         <div class="portfolio-item"
              data-project="<?php echo $project['id']; ?>"
              data-title="<?php echo e($project['title']); ?>"
              data-description="<?php echo e($project['description']); ?>"
              data-tags='<?php echo json_encode($tags); ?>'
-             data-pdf="<?php echo e($project['pdf_path'] ?? ''); ?>">
+             data-images='<?php echo json_encode(array_values(array_unique($galleryImages))); ?>'>
             <div class="portfolio-image">
                 <div class="portfolio-tags">
                     <span class="tag">Case Study</span>
@@ -113,24 +117,35 @@ include 'includes/header.php';
         </div>
     </section>
 
-    <!-- PDF Viewer Modal -->
-    <div class="modal pdf-modal" id="projectModal">
+    <!-- Behance-style Project Modal -->
+    <div class="modal project-modal" id="projectModal">
         <div class="modal-overlay"></div>
-        <div class="modal-container pdf-container">
-            <div class="pdf-header">
-                <h2 class="modal-title"></h2>
-                <button class="modal-close" aria-label="Close modal">&times;</button>
+        <div class="modal-container project-container">
+            <!-- Sticky Header -->
+            <div class="project-header">
+                <div class="project-header-left">
+                    <h2 class="modal-title"></h2>
+                </div>
+                <button class="modal-close" aria-label="Close modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
             </div>
 
-            <!-- PDF Viewer -->
-            <div class="pdf-viewer-wrapper">
-                <iframe class="pdf-viewer" id="pdfViewer" src="" frameborder="0"></iframe>
-            </div>
+            <!-- Scrollable Content -->
+            <div class="project-scroll-container">
+                <!-- Project Info Section -->
+                <div class="project-info">
+                    <p class="modal-description"></p>
+                    <div class="modal-tags"></div>
+                </div>
 
-            <!-- Project Info Footer -->
-            <div class="pdf-footer">
-                <p class="modal-description"></p>
-                <div class="modal-tags"></div>
+                <!-- Images Container - Vertically Stacked -->
+                <div class="project-images" id="projectImages">
+                    <!-- Images will be injected here -->
+                </div>
             </div>
         </div>
     </div>
@@ -140,12 +155,17 @@ include 'includes/header.php';
     const projectsData = {};
     <?php foreach ($projects as $project):
         $tags = json_decode($project['tags'] ?? '[]', true) ?: [];
+        $galleryImages = $project['gallery_images'] ? explode(',', $project['gallery_images']) : [];
+        if ($project['featured_image'] && !in_array($project['featured_image'], $galleryImages)) {
+            array_unshift($galleryImages, $project['featured_image']);
+        }
+        $images = array_values(array_unique($galleryImages));
     ?>
     projectsData[<?php echo $project['id']; ?>] = {
         title: <?php echo json_encode($project['title']); ?>,
         description: <?php echo json_encode($project['description']); ?>,
         tags: <?php echo json_encode($tags); ?>,
-        pdf: <?php echo json_encode($project['pdf_path'] ?? ''); ?>
+        images: <?php echo json_encode($images); ?>
     };
     <?php endforeach; ?>
     </script>
