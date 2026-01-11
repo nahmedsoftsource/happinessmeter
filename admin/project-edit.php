@@ -1,10 +1,11 @@
 <?php
 /**
- * Project Add/Edit
+ * Project Add/Edit with Multiple Gallery Images
  */
 $isEdit = isset($_GET['id']) && is_numeric($_GET['id']);
 $pageTitle = $isEdit ? 'Edit Project' : 'Add Project';
 $project = null;
+$galleryImages = [];
 
 // Fetch project if editing
 if ($isEdit) {
@@ -18,9 +19,35 @@ if ($isEdit) {
             header('Location: projects.php');
             exit;
         }
+
+        // Fetch gallery images
+        $stmt = db()->prepare("SELECT * FROM project_images WHERE project_id = ? ORDER BY sort_order ASC");
+        $stmt->execute([$project['id']]);
+        $galleryImages = $stmt->fetchAll();
     } catch (PDOException $e) {
         setFlash('error', 'Failed to load project.');
         header('Location: projects.php');
+        exit;
+    }
+}
+
+// Handle delete gallery image
+if (isset($_GET['delete_image']) && is_numeric($_GET['delete_image']) && $isEdit) {
+    if (verifyCSRF($_GET['token'] ?? '')) {
+        try {
+            $stmt = db()->prepare("SELECT image_path FROM project_images WHERE id = ? AND project_id = ?");
+            $stmt->execute([$_GET['delete_image'], $project['id']]);
+            $img = $stmt->fetch();
+            if ($img) {
+                deleteImage($img['image_path']);
+                $stmt = db()->prepare("DELETE FROM project_images WHERE id = ?");
+                $stmt->execute([$_GET['delete_image']]);
+                setFlash('success', 'Image deleted.');
+            }
+        } catch (PDOException $e) {
+            setFlash('error', 'Failed to delete image.');
+        }
+        header('Location: project-edit.php?id=' . $project['id']);
         exit;
     }
 }
@@ -45,12 +72,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = 'Title is required.';
         }
 
-        // Handle image upload
+        // Handle featured image upload
         $imagePath = $project['featured_image'] ?? null;
         if (!empty($_FILES['featured_image']['tmp_name'])) {
             $upload = uploadImage($_FILES['featured_image'], 'projects');
             if ($upload['success']) {
-                // Delete old image
                 if ($imagePath) {
                     deleteImage($imagePath);
                 }
@@ -65,7 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_FILES['pdf_file']['tmp_name'])) {
             $pdfUpload = uploadPDF($_FILES['pdf_file'], 'pdfs');
             if ($pdfUpload['success']) {
-                // Delete old PDF
                 if ($pdfPath && file_exists($pdfPath)) {
                     @unlink($pdfPath);
                 }
@@ -94,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $tagsJson, $imagePath, $pdfPath, $status,
                         $isFeatured, $sortOrder, $project['id']
                     ]);
+                    $projectId = $project['id'];
                     setFlash('success', 'Project updated successfully.');
                 } else {
                     $stmt = db()->prepare("
@@ -106,10 +132,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $tagsJson, $imagePath, $pdfPath, $status,
                         $isFeatured, $sortOrder
                     ]);
+                    $projectId = db()->lastInsertId();
                     setFlash('success', 'Project created successfully.');
                 }
 
-                header('Location: projects.php');
+                // Handle multiple gallery images upload
+                if (!empty($_FILES['gallery_images']['tmp_name'][0])) {
+                    $files = $_FILES['gallery_images'];
+                    $fileCount = count($files['tmp_name']);
+
+                    // Get current max sort order
+                    $stmt = db()->prepare("SELECT MAX(sort_order) as max_order FROM project_images WHERE project_id = ?");
+                    $stmt->execute([$projectId]);
+                    $maxOrder = $stmt->fetch()['max_order'] ?? 0;
+
+                    for ($i = 0; $i < $fileCount; $i++) {
+                        if (!empty($files['tmp_name'][$i])) {
+                            $file = [
+                                'name' => $files['name'][$i],
+                                'type' => $files['type'][$i],
+                                'tmp_name' => $files['tmp_name'][$i],
+                                'error' => $files['error'][$i],
+                                'size' => $files['size'][$i]
+                            ];
+
+                            $upload = uploadImage($file, 'projects/gallery');
+                            if ($upload['success']) {
+                                $maxOrder++;
+                                $stmt = db()->prepare("
+                                    INSERT INTO project_images (project_id, image_path, alt_text, sort_order)
+                                    VALUES (?, ?, ?, ?)
+                                ");
+                                $stmt->execute([$projectId, $upload['path'], $title . ' - Image ' . $maxOrder, $maxOrder]);
+                            }
+                        }
+                    }
+                }
+
+                // Update sort orders if provided
+                if (!empty($_POST['image_order'])) {
+                    $orders = $_POST['image_order'];
+                    foreach ($orders as $imageId => $order) {
+                        $stmt = db()->prepare("UPDATE project_images SET sort_order = ? WHERE id = ? AND project_id = ?");
+                        $stmt->execute([$order, $imageId, $projectId]);
+                    }
+                }
+
+                header('Location: project-edit.php?id=' . $projectId);
                 exit;
             } catch (PDOException $e) {
                 setFlash('error', 'Failed to save project: ' . $e->getMessage());
@@ -204,45 +273,64 @@ include 'includes/header.php';
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Featured Image (Thumbnail)</label>
-                    <label class="file-upload" for="featured_image">
-                        <input type="file" id="featured_image" name="featured_image" accept="image/*">
-                        <div class="file-upload-icon">
-                            <i class="bi bi-cloud-upload"></i>
-                        </div>
-                        <p class="file-upload-text">
-                            <span>Click to upload</span> or drag and drop<br>
-                            PNG, JPG, GIF, WebP (max 10MB)
-                        </p>
-                        <?php if ($project && $project['featured_image']): ?>
-                        <div class="file-preview">
-                            <img src="../<?php echo e($project['featured_image']); ?>" alt="Current image">
-                        </div>
-                        <?php endif; ?>
-                    </label>
-                </div>
+            <div class="form-group">
+                <label class="form-label">Featured Image (Thumbnail for homepage)</label>
+                <label class="file-upload" for="featured_image">
+                    <input type="file" id="featured_image" name="featured_image" accept="image/*">
+                    <div class="file-upload-icon">
+                        <i class="bi bi-image"></i>
+                    </div>
+                    <p class="file-upload-text">
+                        <span>Click to upload</span> or drag and drop<br>
+                        This image appears on the homepage grid
+                    </p>
+                    <?php if ($project && $project['featured_image']): ?>
+                    <div class="file-preview">
+                        <img src="../<?php echo e($project['featured_image']); ?>" alt="Current image">
+                    </div>
+                    <?php endif; ?>
+                </label>
+            </div>
 
-                <div class="form-group">
-                    <label class="form-label">Case Study PDF</label>
-                    <label class="file-upload" for="pdf_file">
-                        <input type="file" id="pdf_file" name="pdf_file" accept=".pdf,application/pdf">
-                        <div class="file-upload-icon">
-                            <i class="bi bi-file-pdf"></i>
+            <!-- Gallery Images Section -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="bi bi-images"></i>
+                    Gallery Images (for scrollable modal view)
+                </label>
+                <p class="form-help" style="margin-bottom: 1rem;">
+                    Upload multiple images that will be displayed when user clicks on the project. Images will appear stacked vertically like Behance.
+                </p>
+
+                <?php if (!empty($galleryImages)): ?>
+                <div class="gallery-grid" id="galleryGrid">
+                    <?php foreach ($galleryImages as $index => $img): ?>
+                    <div class="gallery-item" data-id="<?php echo $img['id']; ?>">
+                        <img src="../<?php echo e($img['image_path']); ?>" alt="<?php echo e($img['alt_text']); ?>">
+                        <div class="gallery-item-actions">
+                            <input type="hidden" name="image_order[<?php echo $img['id']; ?>]" value="<?php echo $img['sort_order']; ?>" class="sort-order-input">
+                            <span class="gallery-order"><?php echo $index + 1; ?></span>
+                            <a href="project-edit.php?id=<?php echo $project['id']; ?>&delete_image=<?php echo $img['id']; ?>&token=<?php echo generateCSRF(); ?>"
+                               class="btn-delete-img" onclick="return confirm('Delete this image?');">
+                                <i class="bi bi-trash"></i>
+                            </a>
                         </div>
-                        <p class="file-upload-text">
-                            <span>Click to upload</span> or drag and drop<br>
-                            PDF files only (max 50MB)
-                        </p>
-                        <?php if ($project && $project['pdf_path']): ?>
-                        <div class="file-preview pdf-preview">
-                            <i class="bi bi-file-pdf-fill"></i>
-                            <span><?php echo basename($project['pdf_path']); ?></span>
-                        </div>
-                        <?php endif; ?>
-                    </label>
+                    </div>
+                    <?php endforeach; ?>
                 </div>
+                <?php endif; ?>
+
+                <label class="file-upload gallery-upload" for="gallery_images">
+                    <input type="file" id="gallery_images" name="gallery_images[]" accept="image/*" multiple>
+                    <div class="file-upload-icon">
+                        <i class="bi bi-plus-circle"></i>
+                    </div>
+                    <p class="file-upload-text">
+                        <span>Add Gallery Images</span><br>
+                        Select multiple images at once (PNG, JPG, WebP)
+                    </p>
+                </label>
+                <div id="galleryPreview" class="gallery-preview"></div>
             </div>
 
             <div class="form-group">
@@ -264,6 +352,100 @@ include 'includes/header.php';
     </div>
 </div>
 
+<style>
+/* Gallery Grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--admin-bg);
+    border: 1px solid var(--admin-border);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+}
+
+.gallery-item-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.gallery-order {
+    font-size: 0.75rem;
+    color: var(--admin-text-muted);
+    background: rgba(255,255,255,0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.btn-delete-img {
+    color: #ef4444;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.btn-delete-img:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.gallery-upload {
+    border-style: dashed;
+    background: transparent;
+}
+
+.gallery-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.gallery-preview-item {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.gallery-preview-item img {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    display: block;
+}
+
+.gallery-preview-item .remove-preview {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    background: rgba(0,0,0,0.7);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+
 <script>
 // Auto-generate slug from title
 document.getElementById('title').addEventListener('input', function() {
@@ -276,7 +458,7 @@ document.getElementById('title').addEventListener('input', function() {
     }
 });
 
-// Preview uploaded image
+// Preview featured image
 document.getElementById('featured_image').addEventListener('change', function(e) {
     const preview = this.parentElement.querySelector('.file-preview');
     if (this.files && this.files[0]) {
@@ -286,12 +468,33 @@ document.getElementById('featured_image').addEventListener('change', function(e)
                 const div = document.createElement('div');
                 div.className = 'file-preview';
                 div.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
-                document.querySelector('.file-upload').appendChild(div);
+                document.getElementById('featured_image').parentElement.appendChild(div);
             } else {
                 preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
             }
         };
         reader.readAsDataURL(this.files[0]);
+    }
+});
+
+// Preview multiple gallery images
+document.getElementById('gallery_images').addEventListener('change', function(e) {
+    const previewContainer = document.getElementById('galleryPreview');
+    previewContainer.innerHTML = '';
+
+    if (this.files) {
+        Array.from(this.files).forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = 'gallery-preview-item';
+                div.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview ${index + 1}">
+                `;
+                previewContainer.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
     }
 });
 </script>
