@@ -200,14 +200,7 @@
     user-select: none;
 }
 
-/* Active nav state */
-nav a.active {
-    color: var(--text-primary) !important;
-}
-
-nav a.active::after {
-    width: 100%;
-}
+/* Active nav state is now handled in style.css */
 
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 1024px) {
