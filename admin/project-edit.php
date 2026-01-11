@@ -303,13 +303,22 @@ include 'includes/header.php';
                 </p>
 
                 <?php if (!empty($galleryImages)): ?>
+                <p class="form-help" style="margin-bottom: 0.5rem; color: var(--admin-primary);">
+                    <i class="bi bi-info-circle"></i> Set order numbers (1 = top, 2 = second, etc.) - Images will appear seamlessly stacked
+                </p>
                 <div class="gallery-grid" id="galleryGrid">
                     <?php foreach ($galleryImages as $index => $img): ?>
                     <div class="gallery-item" data-id="<?php echo $img['id']; ?>">
                         <img src="../<?php echo e($img['image_path']); ?>" alt="<?php echo e($img['alt_text']); ?>">
                         <div class="gallery-item-actions">
-                            <input type="hidden" name="image_order[<?php echo $img['id']; ?>]" value="<?php echo $img['sort_order']; ?>" class="sort-order-input">
-                            <span class="gallery-order"><?php echo $index + 1; ?></span>
+                            <div class="order-input-wrapper">
+                                <label>Order:</label>
+                                <input type="number"
+                                       name="image_order[<?php echo $img['id']; ?>]"
+                                       value="<?php echo $img['sort_order']; ?>"
+                                       min="1"
+                                       class="order-input">
+                            </div>
                             <a href="project-edit.php?id=<?php echo $project['id']; ?>&delete_image=<?php echo $img['id']; ?>&token=<?php echo generateCSRF(); ?>"
                                class="btn-delete-img" onclick="return confirm('Delete this image?');">
                                 <i class="bi bi-trash"></i>
@@ -381,15 +390,35 @@ include 'includes/header.php';
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.7);
 }
 
-.gallery-order {
-    font-size: 0.75rem;
+.order-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.order-input-wrapper label {
+    font-size: 0.7rem;
     color: var(--admin-text-muted);
+}
+
+.order-input {
+    width: 50px;
+    padding: 0.25rem 0.375rem;
+    font-size: 0.8rem;
     background: rgba(255,255,255,0.1);
-    padding: 0.25rem 0.5rem;
+    border: 1px solid rgba(255,255,255,0.2);
     border-radius: 4px;
+    color: var(--admin-text);
+    text-align: center;
+}
+
+.order-input:focus {
+    outline: none;
+    border-color: var(--admin-primary);
+    background: rgba(255,255,255,0.15);
 }
 
 .btn-delete-img {
