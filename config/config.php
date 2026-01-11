@@ -184,6 +184,55 @@ function deleteImage($path) {
 }
 
 /**
+ * Upload PDF file
+ */
+function uploadPDF($file, $directory = 'pdfs') {
+    // Check if file was uploaded
+    if (!isset($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
+        return ['success' => false, 'error' => 'No file uploaded'];
+    }
+
+    // Max PDF size: 50MB
+    $maxPdfSize = 50 * 1024 * 1024;
+    if ($file['size'] > $maxPdfSize) {
+        return ['success' => false, 'error' => 'File too large. Maximum size is 50MB'];
+    }
+
+    // Check file type
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo->file($file['tmp_name']);
+
+    if ($mimeType !== 'application/pdf') {
+        return ['success' => false, 'error' => 'Invalid file type. Only PDF files are allowed'];
+    }
+
+    // Generate unique filename
+    $extension = 'pdf';
+    $originalName = pathinfo($file['name'], PATHINFO_FILENAME);
+    $safeName = preg_replace('/[^a-z0-9-]/', '-', strtolower($originalName));
+    $filename = $safeName . '_' . time() . '.' . $extension;
+
+    // Create directory if not exists
+    $uploadDir = UPLOAD_PATH . $directory . '/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    // Move uploaded file
+    $destination = $uploadDir . $filename;
+    if (move_uploaded_file($file['tmp_name'], $destination)) {
+        return [
+            'success' => true,
+            'filename' => $filename,
+            'path' => 'uploads/' . $directory . '/' . $filename,
+            'url' => UPLOAD_URL . $directory . '/' . $filename
+        ];
+    }
+
+    return ['success' => false, 'error' => 'Failed to move uploaded file'];
+}
+
+/**
  * Check if user is logged in
  */
 function isLoggedIn() {

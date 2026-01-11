@@ -533,95 +533,103 @@ footer {
     transform: rotate(90deg);
 }
 
-/* ==================== CAROUSEL ==================== */
-.carousel {
-    position: relative;
+/* ==================== PDF VIEWER MODAL ==================== */
+.pdf-modal .modal-container.pdf-container {
+    width: 95%;
+    max-width: 1000px;
+    height: 90vh;
+    max-height: 90vh;
     display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.carousel-track-container {
-    flex: 1;
-    overflow: hidden;
-    border-radius: 12px;
+    flex-direction: column;
     background: var(--bg-secondary);
+    border-radius: 16px;
+    overflow: hidden;
 }
 
-.carousel-track {
+.pdf-header {
     display: flex;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.carousel-slide {
-    min-width: 100%;
-    aspect-ratio: 16/10;
-}
-
-.carousel-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
-}
-
-.carousel-btn {
-    width: 48px;
-    height: 48px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    transition: var(--transition);
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     flex-shrink: 0;
 }
 
-.carousel-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: scale(1.1);
+.pdf-header .modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.02em;
 }
 
-.carousel-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
-
-.carousel-btn:disabled:hover {
-    transform: none;
-}
-
-/* Carousel Indicators */
-.carousel-indicators {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem 0;
-}
-
-.carousel-indicator {
-    width: 8px;
-    height: 8px;
+.pdf-header .modal-close {
+    position: static;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
+    color: var(--text-primary);
+    font-size: 1.5rem;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: var(--transition);
 }
 
-.carousel-indicator:hover {
-    background: rgba(255, 255, 255, 0.5);
+.pdf-header .modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
 }
 
-.carousel-indicator.active {
-    background: var(--text-primary);
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+/* PDF Viewer Wrapper - Scrollable */
+.pdf-viewer-wrapper {
+    flex: 1;
+    overflow: auto;
+    background: #1a1a1a;
+    display: flex;
+    justify-content: center;
 }
 
-/* Modal Content */
+.pdf-viewer {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    border: none;
+    background: #1a1a1a;
+}
+
+/* PDF Footer */
+.pdf-footer {
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.pdf-footer .modal-description {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.pdf-footer .modal-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.modal-tags .tag {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Legacy Modal Content (for non-PDF modals) */
 .modal-content {
     padding: 1.5rem 0;
     text-align: center;
@@ -647,11 +655,6 @@ footer {
     justify-content: center;
     gap: 0.5rem;
     flex-wrap: wrap;
-}
-
-.modal-tags .tag {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 /* ==================== ANIMATIONS ==================== */

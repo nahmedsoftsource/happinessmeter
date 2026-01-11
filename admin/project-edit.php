@@ -60,6 +60,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        // Handle PDF upload
+        $pdfPath = $project['pdf_path'] ?? null;
+        if (!empty($_FILES['pdf_file']['tmp_name'])) {
+            $pdfUpload = uploadPDF($_FILES['pdf_file'], 'pdfs');
+            if ($pdfUpload['success']) {
+                // Delete old PDF
+                if ($pdfPath && file_exists($pdfPath)) {
+                    @unlink($pdfPath);
+                }
+                $pdfPath = $pdfUpload['path'];
+            } else {
+                $errors[] = $pdfUpload['error'];
+            }
+        }
+
         if (empty($errors)) {
             try {
                 // Process tags
@@ -70,25 +85,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt = db()->prepare("
                         UPDATE projects SET
                             title = ?, slug = ?, description = ?, category = ?,
-                            tags = ?, featured_image = ?, status = ?,
+                            tags = ?, featured_image = ?, pdf_path = ?, status = ?,
                             is_featured = ?, sort_order = ?, updated_at = NOW()
                         WHERE id = ?
                     ");
                     $stmt->execute([
                         $title, $slug, $description, $category,
-                        $tagsJson, $imagePath, $status,
+                        $tagsJson, $imagePath, $pdfPath, $status,
                         $isFeatured, $sortOrder, $project['id']
                     ]);
                     setFlash('success', 'Project updated successfully.');
                 } else {
                     $stmt = db()->prepare("
                         INSERT INTO projects
-                            (title, slug, description, category, tags, featured_image, status, is_featured, sort_order)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            (title, slug, description, category, tags, featured_image, pdf_path, status, is_featured, sort_order)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ");
                     $stmt->execute([
                         $title, $slug, $description, $category,
-                        $tagsJson, $imagePath, $status,
+                        $tagsJson, $imagePath, $pdfPath, $status,
                         $isFeatured, $sortOrder
                     ]);
                     setFlash('success', 'Project created successfully.');
@@ -189,23 +204,45 @@ include 'includes/header.php';
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Featured Image</label>
-                <label class="file-upload" for="featured_image">
-                    <input type="file" id="featured_image" name="featured_image" accept="image/*">
-                    <div class="file-upload-icon">
-                        <i class="bi bi-cloud-upload"></i>
-                    </div>
-                    <p class="file-upload-text">
-                        <span>Click to upload</span> or drag and drop<br>
-                        PNG, JPG, GIF, WebP (max 10MB)
-                    </p>
-                    <?php if ($project && $project['featured_image']): ?>
-                    <div class="file-preview">
-                        <img src="../<?php echo e($project['featured_image']); ?>" alt="Current image">
-                    </div>
-                    <?php endif; ?>
-                </label>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Featured Image (Thumbnail)</label>
+                    <label class="file-upload" for="featured_image">
+                        <input type="file" id="featured_image" name="featured_image" accept="image/*">
+                        <div class="file-upload-icon">
+                            <i class="bi bi-cloud-upload"></i>
+                        </div>
+                        <p class="file-upload-text">
+                            <span>Click to upload</span> or drag and drop<br>
+                            PNG, JPG, GIF, WebP (max 10MB)
+                        </p>
+                        <?php if ($project && $project['featured_image']): ?>
+                        <div class="file-preview">
+                            <img src="../<?php echo e($project['featured_image']); ?>" alt="Current image">
+                        </div>
+                        <?php endif; ?>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Case Study PDF</label>
+                    <label class="file-upload" for="pdf_file">
+                        <input type="file" id="pdf_file" name="pdf_file" accept=".pdf,application/pdf">
+                        <div class="file-upload-icon">
+                            <i class="bi bi-file-pdf"></i>
+                        </div>
+                        <p class="file-upload-text">
+                            <span>Click to upload</span> or drag and drop<br>
+                            PDF files only (max 50MB)
+                        </p>
+                        <?php if ($project && $project['pdf_path']): ?>
+                        <div class="file-preview pdf-preview">
+                            <i class="bi bi-file-pdf-fill"></i>
+                            <span><?php echo basename($project['pdf_path']); ?></span>
+                        </div>
+                        <?php endif; ?>
+                    </label>
+                </div>
             </div>
 
             <div class="form-group">

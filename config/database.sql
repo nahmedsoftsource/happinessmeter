@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS projects (
     category VARCHAR(50) DEFAULT 'Product Design',
     tags JSON,
     featured_image VARCHAR(255),
+    pdf_path VARCHAR(255),
     status ENUM('published', 'draft', 'coming_soon') DEFAULT 'draft',
     is_featured BOOLEAN DEFAULT FALSE,
     sort_order INT DEFAULT 0,
@@ -123,11 +124,11 @@ INSERT INTO skills (title, description, icon, sort_order) VALUES
 -- =============================================
 -- Sample Projects Data
 -- =============================================
-INSERT INTO projects (title, slug, description, category, tags, featured_image, status, is_featured, sort_order) VALUES
-('Libra', 'libra', 'A modern public library catalog app integrating physical book checkout, e-readers, audiobooks, and more. Designed to make discovering and borrowing books seamless across all formats.', 'Product Design', '["Product Design", "Mobile App", "UX/UI"]', 'uploads/projects/1.jpg', 'coming_soon', TRUE, 1),
-('Energy Dashboard', 'energy-dashboard', 'A comprehensive dashboard for tracking energy from orbital solar satellites with real-time monitoring, analytics, and predictive insights for sustainable energy management.', 'Product Design', '["Product Design", "Dashboard", "Data Visualization"]', 'uploads/projects/2.jpg', 'coming_soon', TRUE, 2),
-('Solar Company Branding', 'solar-branding', 'Complete branding and product design for a home solar energy company. Including logo design, brand guidelines, marketing materials, and digital presence.', 'Branding', '["Branding", "Graphic Design", "Identity"]', 'uploads/projects/3.jpg', 'coming_soon', TRUE, 3),
-('Protocol', 'protocol', 'A platform that makes it easy for traditional art dealers and galleries to buy and sell art with crypto. Bridging the gap between traditional art market and Web3.', 'Product Design', '["Product Design", "Web3", "Marketplace"]', 'uploads/projects/4.jpg', 'coming_soon', TRUE, 4);
+INSERT INTO projects (title, slug, description, category, tags, featured_image, pdf_path, status, is_featured, sort_order) VALUES
+('Libra', 'libra', 'A modern public library catalog app integrating physical book checkout, e-readers, audiobooks, and more. Designed to make discovering and borrowing books seamless across all formats.', 'Product Design', '["Product Design", "Mobile App", "UX/UI"]', 'uploads/projects/1.jpg', 'uploads/pdfs/libra-casestudy.pdf', 'coming_soon', TRUE, 1),
+('Energy Dashboard', 'energy-dashboard', 'A comprehensive dashboard for tracking energy from orbital solar satellites with real-time monitoring, analytics, and predictive insights for sustainable energy management.', 'Product Design', '["Product Design", "Dashboard", "Data Visualization"]', 'uploads/projects/2.jpg', 'uploads/pdfs/energy-dashboard.pdf', 'coming_soon', TRUE, 2),
+('Solar Company Branding', 'solar-branding', 'Complete branding and product design for a home solar energy company. Including logo design, brand guidelines, marketing materials, and digital presence.', 'Branding', '["Branding", "Graphic Design", "Identity"]', 'uploads/projects/3.jpg', 'uploads/pdfs/solar-branding.pdf', 'coming_soon', TRUE, 3),
+('Protocol', 'protocol', 'A platform that makes it easy for traditional art dealers and galleries to buy and sell art with crypto. Bridging the gap between traditional art market and Web3.', 'Product Design', '["Product Design", "Web3", "Marketplace"]', 'uploads/projects/4.jpg', 'uploads/pdfs/protocol.pdf', 'coming_soon', TRUE, 4);
 
 -- =============================================
 -- Sample Art Data
