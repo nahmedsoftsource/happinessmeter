@@ -21,14 +21,20 @@ $siteName = getSetting('site_name', 'Josh Warner');
 <body<?php echo isset($bodyClass) ? ' class="' . e($bodyClass) . '"' : ''; ?>>
     <!-- Header Navigation -->
     <header>
-        <div class="logo">
-            <div class="logo-circle"><?php echo e(substr($siteName, 0, 1) . substr(strrchr($siteName, ' ') ?: $siteName, 1, 1)); ?></div>
-            <span><?php echo e($siteName); ?></span>
+        <div class="header-left">
+            <div class="logo">
+                <div class="logo-circle"><?php echo e(substr($siteName, 0, 1) . substr(strrchr($siteName, ' ') ?: $siteName, 1, 1)); ?></div>
+                <span><?php echo e($siteName); ?></span>
+            </div>
         </div>
-        <nav>
-            <a href="index.php"<?php echo $currentPage === 'index' ? ' class="active"' : ''; ?>>Projects</a>
-            <a href="art.php"<?php echo $currentPage === 'art' ? ' class="active"' : ''; ?>>Art</a>
-            <a href="info.html"<?php echo $currentPage === 'info' ? ' class="active"' : ''; ?>>Info</a>
-            <a href="contact.html"<?php echo $currentPage === 'contact' ? ' class="active"' : ''; ?>>Contact</a>
-        </nav>
+        <div class="header-center">
+            <nav>
+                <a href="index.php"<?php echo $currentPage === 'index' ? ' class="active"' : ''; ?>>Projects</a>
+                <a href="art.php"<?php echo $currentPage === 'art' ? ' class="active"' : ''; ?>>Art</a>
+                <a href="info.html"<?php echo $currentPage === 'info' ? ' class="active"' : ''; ?>>Info</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <a href="contact.html" class="contact-btn<?php echo $currentPage === 'contact' ? ' active' : ''; ?>">Contact</a>
+        </div>
     </header>
