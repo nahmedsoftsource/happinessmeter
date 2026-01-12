@@ -66,28 +66,33 @@ header {
 
 /* Contact button - Apple style with glow */
 .contact-btn {
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
     font-size: 0.875rem;
     font-weight: 400;
     letter-spacing: -0.01em;
     padding: 0.5rem 1rem;
     transition: all 0.3s ease;
+    text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.3),
+        0 0 15px rgba(255, 255, 255, 0.2);
 }
 
 .contact-btn:hover {
     color: #ffffff;
     text-shadow:
-        0 0 10px rgba(255, 255, 255, 0.5),
-        0 0 20px rgba(255, 255, 255, 0.3),
-        0 0 30px rgba(255, 255, 255, 0.2);
+        0 0 10px rgba(255, 255, 255, 0.7),
+        0 0 20px rgba(255, 255, 255, 0.5),
+        0 0 30px rgba(255, 255, 255, 0.3);
 }
 
 .contact-btn.active {
     color: #ffffff;
     text-shadow:
-        0 0 10px rgba(255, 255, 255, 0.5),
-        0 0 20px rgba(255, 255, 255, 0.3);
+        0 0 10px rgba(255, 255, 255, 0.6),
+        0 0 20px rgba(255, 255, 255, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+    padding-bottom: calc(0.5rem - 1px);
 }
 
 .logo {
@@ -138,7 +143,7 @@ nav {
 }
 
 nav a {
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
     font-size: 0.875rem;
     font-weight: 400;
@@ -146,21 +151,26 @@ nav a {
     transition: all 0.3s ease;
     position: relative;
     padding: 0.5rem 1rem;
+    text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.3),
+        0 0 15px rgba(255, 255, 255, 0.2);
 }
 
 nav a:hover {
     color: #ffffff;
     text-shadow:
-        0 0 10px rgba(255, 255, 255, 0.5),
-        0 0 20px rgba(255, 255, 255, 0.3),
-        0 0 30px rgba(255, 255, 255, 0.2);
+        0 0 10px rgba(255, 255, 255, 0.7),
+        0 0 20px rgba(255, 255, 255, 0.5),
+        0 0 30px rgba(255, 255, 255, 0.3);
 }
 
 nav a.active {
     color: #ffffff;
     text-shadow:
-        0 0 10px rgba(255, 255, 255, 0.5),
-        0 0 20px rgba(255, 255, 255, 0.3);
+        0 0 10px rgba(255, 255, 255, 0.6),
+        0 0 20px rgba(255, 255, 255, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+    padding-bottom: calc(0.5rem - 1px);
 }
 
 /* ==================== HERO SECTION ==================== */
