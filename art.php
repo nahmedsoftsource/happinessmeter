@@ -73,27 +73,13 @@ include 'includes/header.php';
         </div>
     </section>
 
-    <!-- Art Lightbox Modal -->
+    <!-- Art Lightbox Modal (Single Image Only) -->
     <div class="lightbox" id="artLightbox">
         <div class="lightbox-overlay"></div>
         <div class="lightbox-container">
             <button class="lightbox-close" aria-label="Close">&times;</button>
-            <button class="lightbox-nav lightbox-prev" aria-label="Previous">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </button>
             <div class="lightbox-content">
                 <img src="" alt="" class="lightbox-image">
-            </div>
-            <button class="lightbox-nav lightbox-next" aria-label="Next">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </button>
-            <div class="lightbox-info">
-                <h3 class="lightbox-title"></h3>
-                <span class="lightbox-category"></span>
             </div>
         </div>
     </div>

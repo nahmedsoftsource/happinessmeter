@@ -97,24 +97,17 @@
     };
 
     // =============================================
-    // Lightbox
+    // Lightbox (Single Image Only)
     // =============================================
     const lightbox = {
         element: null,
         image: null,
-        title: null,
-        category: null,
-        currentIndex: 0,
-        visibleItems: [],
 
         init: function() {
             this.element = document.getElementById('artLightbox');
             if (!this.element) return;
 
             this.image = this.element.querySelector('.lightbox-image');
-            this.title = this.element.querySelector('.lightbox-title');
-            this.category = this.element.querySelector('.lightbox-category');
-
             this.bindEvents();
         },
 
@@ -137,58 +130,29 @@
                 this.close();
             });
 
-            // Navigation
-            this.element.querySelector('.lightbox-prev').addEventListener('click', () => {
-                this.prev();
-            });
-
-            this.element.querySelector('.lightbox-next').addEventListener('click', () => {
-                this.next();
-            });
-
-            // Keyboard navigation
+            // Keyboard - Escape to close
             document.addEventListener('keydown', (e) => {
                 if (!this.element.classList.contains('active')) return;
-
                 if (e.key === 'Escape') this.close();
-                if (e.key === 'ArrowLeft') this.prev();
-                if (e.key === 'ArrowRight') this.next();
-            });
-
-            // Touch/swipe support
-            let touchStartX = 0;
-
-            this.element.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
-            this.element.addEventListener('touchend', (e) => {
-                const touchEndX = e.changedTouches[0].screenX;
-                const diff = touchStartX - touchEndX;
-
-                if (Math.abs(diff) > 50) {
-                    if (diff > 0) {
-                        this.next();
-                    } else {
-                        this.prev();
-                    }
-                }
-            }, { passive: true });
-        },
-
-        updateVisibleItems: function() {
-            this.visibleItems = [];
-            document.querySelectorAll('.art-item:not(.hidden)').forEach(item => {
-                this.visibleItems.push(parseInt(item.dataset.index));
             });
         },
 
         open: function(index) {
-            this.updateVisibleItems();
-            this.currentIndex = this.visibleItems.indexOf(index);
-            if (this.currentIndex === -1) this.currentIndex = 0;
+            const data = artData[index];
+            if (!data) return;
 
-            this.updateContent();
+            // Set image
+            this.image.style.opacity = '0';
+            this.image.src = data.src;
+            this.image.alt = data.title;
+            this.image.onload = () => {
+                this.image.style.opacity = '1';
+            };
+            // Fallback for cached images
+            if (this.image.complete) {
+                this.image.style.opacity = '1';
+            }
+
             this.element.classList.add('active');
             document.body.classList.add('modal-open');
         },
@@ -196,54 +160,6 @@
         close: function() {
             this.element.classList.remove('active');
             document.body.classList.remove('modal-open');
-        },
-
-        prev: function() {
-            if (this.currentIndex > 0) {
-                this.currentIndex--;
-                this.updateContent();
-            }
-        },
-
-        next: function() {
-            if (this.currentIndex < this.visibleItems.length - 1) {
-                this.currentIndex++;
-                this.updateContent();
-            }
-        },
-
-        updateContent: function() {
-            const dataIndex = this.visibleItems[this.currentIndex];
-            const data = artData[dataIndex];
-
-            if (!data) return;
-
-            // Update image with fade effect
-            this.image.style.opacity = '0';
-            setTimeout(() => {
-                this.image.src = data.src;
-                this.image.alt = data.title;
-                this.image.onload = () => {
-                    this.image.style.opacity = '1';
-                };
-                // Fallback for cached images
-                if (this.image.complete) {
-                    this.image.style.opacity = '1';
-                }
-            }, 150);
-
-            this.title.textContent = data.title;
-            this.category.textContent = data.category;
-
-            // Update navigation buttons
-            const prevBtn = this.element.querySelector('.lightbox-prev');
-            const nextBtn = this.element.querySelector('.lightbox-next');
-
-            prevBtn.style.opacity = this.currentIndex === 0 ? '0.3' : '1';
-            prevBtn.style.pointerEvents = this.currentIndex === 0 ? 'none' : 'auto';
-
-            nextBtn.style.opacity = this.currentIndex === this.visibleItems.length - 1 ? '0.3' : '1';
-            nextBtn.style.pointerEvents = this.currentIndex === this.visibleItems.length - 1 ? 'none' : 'auto';
         }
     };
 
