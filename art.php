@@ -60,9 +60,6 @@ include 'includes/header.php';
                     <?php else: ?>
                     <div class="placeholder-image"></div>
                     <?php endif; ?>
-                    <div class="art-overlay">
-                        <span class="art-view">View</span>
-                    </div>
                 </div>
                 <div class="art-info">
                     <h3><?php echo e($art['title']); ?></h3>

@@ -64,39 +64,26 @@ header {
     justify-content: flex-end;
 }
 
-/* Contact button with glow */
+/* Contact button - white pill style */
 .contact-btn {
-    color: var(--text-primary);
+    color: var(--bg-dark);
     text-decoration: none;
     font-size: 0.875rem;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: -0.01em;
     padding: 0.6rem 1.25rem;
     border-radius: 100px;
-    background-color: rgba(240, 240, 240, 0.05);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    border: 1px solid rgba(51, 51, 51, 0.1);
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 10px 0px;
+    background-color: rgba(255, 255, 255, 0.9);
     transition: var(--transition);
-    text-shadow:
-        0 0 8px rgba(255, 255, 255, 0.7),
-        0 0 16px rgba(255, 255, 255, 0.5),
-        0 0 24px rgba(255, 255, 255, 0.3);
 }
 
 .contact-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    text-shadow:
-        0 0 12px rgba(255, 255, 255, 1),
-        0 0 24px rgba(255, 255, 255, 0.8),
-        0 0 36px rgba(255, 255, 255, 0.6),
-        0 0 48px rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-1px);
 }
 
 .contact-btn.active {
-    color: var(--text-primary) !important;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 1);
 }
 
 .logo {
@@ -107,18 +94,11 @@ header {
     font-size: 0.95rem;
     letter-spacing: -0.01em;
     cursor: pointer;
-    text-shadow:
-        0 0 8px rgba(255, 255, 255, 0.8),
-        0 0 16px rgba(255, 255, 255, 0.6),
-        0 0 24px rgba(255, 255, 255, 0.4);
     transition: var(--transition);
 }
 
 .logo:hover {
-    text-shadow:
-        0 0 12px rgba(255, 255, 255, 1),
-        0 0 24px rgba(255, 255, 255, 0.8),
-        0 0 36px rgba(255, 255, 255, 0.6);
+    opacity: 0.8;
 }
 
 .logo-circle {
@@ -132,18 +112,7 @@ header {
     font-weight: 600;
     font-size: 0.8rem;
     color: var(--bg-dark);
-    box-shadow:
-        0 0 12px rgba(255, 255, 255, 0.5),
-        0 0 24px rgba(255, 255, 255, 0.3),
-        0 0 36px rgba(255, 255, 255, 0.2);
     transition: var(--transition);
-}
-
-.logo:hover .logo-circle {
-    box-shadow:
-        0 0 16px rgba(255, 255, 255, 0.7),
-        0 0 32px rgba(255, 255, 255, 0.5),
-        0 0 48px rgba(255, 255, 255, 0.3);
 }
 
 nav {
@@ -151,12 +120,11 @@ nav {
     gap: 2px;
     align-items: center;
     padding: 4px;
-    background-color: rgba(240, 240, 240, 0.05);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background-color: rgba(40, 40, 40, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 100px;
-    border: 1px solid rgba(51, 51, 51, 0.1);
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 10px 0px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 nav a {
@@ -169,24 +137,15 @@ nav a {
     position: relative;
     padding: 0.6rem 1.25rem;
     border-radius: 100px;
-    text-shadow:
-        0 0 8px rgba(255, 255, 255, 0.7),
-        0 0 16px rgba(255, 255, 255, 0.5),
-        0 0 24px rgba(255, 255, 255, 0.3);
 }
 
 nav a:hover {
-    background: rgba(255, 255, 255, 0.08);
-    text-shadow:
-        0 0 12px rgba(255, 255, 255, 1),
-        0 0 24px rgba(255, 255, 255, 0.8),
-        0 0 36px rgba(255, 255, 255, 0.6),
-        0 0 48px rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 nav a.active {
-    color: var(--text-primary) !important;
-    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.12);
 }
 
 /* ==================== HERO SECTION ==================== */
