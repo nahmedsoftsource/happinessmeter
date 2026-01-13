@@ -283,26 +283,11 @@
     };
 
     // =============================================
-    // Header Scroll Effect
+    // Header Scroll Effect (disabled - keeping transparent)
     // =============================================
     const headerScroll = {
         init: function () {
-            const header = document.querySelector('header');
-            if (!header) return;
-
-            let lastScroll = 0;
-
-            window.addEventListener('scroll', () => {
-                const currentScroll = window.pageYOffset;
-
-                if (currentScroll > 100) {
-                    header.style.background = 'rgba(0, 0, 0, 0.98)';
-                } else {
-                    header.style.background = 'rgba(0, 0, 0, 0.95)';
-                }
-
-                lastScroll = currentScroll;
-            }, { passive: true });
+            // Header stays transparent on scroll
         }
     };
 
