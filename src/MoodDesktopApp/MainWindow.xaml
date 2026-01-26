@@ -6,244 +6,210 @@
         xmlns:vm="clr-namespace:MoodDesktopApp.ViewModels"
         mc:Ignorable="d"
         Title="MoodTrack"
-        Height="380" Width="780"
+        Height="480" Width="920"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
+        WindowStyle="SingleBorderWindow"
+        Background="#F0F0F0"
         Topmost="True"
         ShowInTaskbar="True"
         ResizeMode="NoResize"
-        MouseLeftButtonDown="Window_MouseLeftButtonDown"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>
 
-    <Border Background="White"
-            CornerRadius="15"
-            BorderBrush="#E0E0E0"
-            BorderThickness="1">
-        <Border.Effect>
-            <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.3"/>
-        </Border.Effect>
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <!-- Greeting -->
+        <TextBlock Grid.Row="0"
+                   Text="{Binding Greeting}"
+                   FontSize="36"
+                   FontWeight="Bold"
+                   Foreground="#212121"
+                   HorizontalAlignment="Center"
+                   Margin="0,20,0,10"/>
 
-            <!-- Title Bar -->
-            <Grid Grid.Row="0" Background="#F5F5F5" Height="40">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+        <!-- Question -->
+        <TextBlock Grid.Row="1"
+                   Text="How are you feeling?"
+                   FontSize="18"
+                   Foreground="#757575"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,25"/>
 
-                <TextBlock Text="MoodTrack"
-                           VerticalAlignment="Center"
-                           Margin="15,0,0,0"
-                           FontSize="14"
-                           FontWeight="SemiBold"
-                           Foreground="#424242"/>
-
-                <Button Grid.Column="1"
-                        Content="X"
-                        Width="40" Height="40"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Foreground="#757575"
-                        FontWeight="Bold"
-                        Click="CloseButton_Click"
-                        Cursor="Hand">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#FFCDD2"/>
-                                    <Setter Property="Foreground" Value="#C62828"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-            </Grid>
-
-            <!-- Question -->
-            <StackPanel Grid.Row="1" Margin="20,20,20,10">
-                <TextBlock Text="{Binding Greeting}"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           Foreground="#212121"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="How are you feeling?"
-                           FontSize="16"
-                           Foreground="#757575"
-                           HorizontalAlignment="Center"
-                           Margin="0,8,0,0"/>
+        <!-- Status Message -->
+        <Border Grid.Row="2"
+                Background="#FFF8E1"
+                CornerRadius="8"
+                Padding="15,10"
+                Margin="0,0,0,15"
+                BorderBrush="#FFE082"
+                BorderThickness="1"
+                HorizontalAlignment="Center"
+                Visibility="{Binding ShowStatusMessage, Converter={StaticResource BoolToVisibilityConverter}}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="&#9200;" FontSize="18" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding StatusMessage}" FontSize="13" VerticalAlignment="Center" Foreground="#5D4037"/>
             </StackPanel>
+        </Border>
 
-            <!-- Status Message (Outside office hours or already submitted) -->
-            <Border Grid.Row="2"
-                    Background="#FFF8E1"
-                    CornerRadius="8"
-                    Padding="15,10"
-                    Margin="30,0,30,15"
-                    BorderBrush="#FFE082"
-                    BorderThickness="1"
-                    Visibility="{Binding ShowStatusMessage, Converter={StaticResource BoolToVisibilityConverter}}">
+        <!-- Mood Buttons -->
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding ShowMoodButtons, Converter={StaticResource BoolToVisibilityConverter}}">
+
+            <Button Style="{StaticResource MoodButtonStyle}"
+                    Background="{Binding SoHappyBackground}"
+                    BorderBrush="{Binding SoHappyBorder}"
+                    BorderThickness="{Binding SoHappyBorderThickness}"
+                    Command="{Binding SelectMoodCommand}"
+                    CommandParameter="SoHappy"
+                    IsEnabled="{Binding CanSelectMood}">
                 <StackPanel>
-                    <TextBlock Text="&#9200;" FontSize="24" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                    <TextBlock Text="{Binding StatusMessage}"
-                               FontSize="13"
-                               TextWrapping="Wrap"
-                               TextAlignment="Center"
-                               Foreground="#5D4037"/>
+                    <TextBlock Text="&#128513;" FontSize="40" HorizontalAlignment="Center"/>
+                    <TextBlock Text="So Happy" Margin="0,8,0,0" HorizontalAlignment="Center"/>
                 </StackPanel>
-            </Border>
+            </Button>
 
-            <!-- Mood Buttons / Confirmation -->
-            <Grid Grid.Row="3">
-                <!-- Mood Selection -->
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Visibility="{Binding ShowMoodButtons, Converter={StaticResource BoolToVisibilityConverter}}">
-
-                    <!-- So Happy Button -->
-                    <Button Style="{StaticResource MoodButtonStyle}"
-                            Background="{StaticResource SoHappyBrush}"
-                            Command="{Binding SelectMoodCommand}"
-                            CommandParameter="SoHappy"
-                            IsEnabled="{Binding CanSelectMood}">
-                        <StackPanel>
-                            <TextBlock Text="&#128513;" FontSize="32" HorizontalAlignment="Center"/>
-                            <TextBlock Text="So Happy" Margin="0,5,0,0" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Very Busy Button -->
-                    <Button Style="{StaticResource MoodButtonStyle}"
-                            Background="{StaticResource VeryBusyBrush}"
-                            Command="{Binding SelectMoodCommand}"
-                            CommandParameter="VeryBusy"
-                            IsEnabled="{Binding CanSelectMood}">
-                        <StackPanel>
-                            <TextBlock Text="&#128104;&#8205;&#128187;" FontSize="32" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Very Busy" Margin="0,5,0,0" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Positive Energy Button -->
-                    <Button Style="{StaticResource MoodButtonStyle}"
-                            Background="{StaticResource PositiveEnergyBrush}"
-                            Command="{Binding SelectMoodCommand}"
-                            CommandParameter="PositiveEnergy"
-                            IsEnabled="{Binding CanSelectMood}">
-                        <StackPanel>
-                            <TextBlock Text="&#9889;" FontSize="32" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Positive Energy" Margin="0,5,0,0" HorizontalAlignment="Center" FontSize="10"/>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Not in Mood Button -->
-                    <Button Style="{StaticResource MoodButtonStyle}"
-                            Background="{StaticResource NotInMoodBrush}"
-                            Command="{Binding SelectMoodCommand}"
-                            CommandParameter="NotInMood"
-                            IsEnabled="{Binding CanSelectMood}">
-                        <StackPanel>
-                            <TextBlock Text="&#128533;" FontSize="32" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Not in Mood" Margin="0,5,0,0" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Hungry Button -->
-                    <Button Style="{StaticResource MoodButtonStyle}"
-                            Background="{StaticResource HungryBrush}"
-                            Command="{Binding SelectMoodCommand}"
-                            CommandParameter="Hungry"
-                            IsEnabled="{Binding CanSelectMood}">
-                        <StackPanel>
-                            <TextBlock Text="&#127828;" FontSize="32" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Hungry" Margin="0,5,0,0" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Grumpy Button -->
-                    <Button Style="{StaticResource MoodButtonStyle}"
-                            Background="{StaticResource GrumpyBrush}"
-                            Command="{Binding SelectMoodCommand}"
-                            CommandParameter="Grumpy"
-                            IsEnabled="{Binding CanSelectMood}">
-                        <StackPanel>
-                            <TextBlock Text="&#129314;" FontSize="32" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Grumpy" Margin="0,5,0,0" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Sleepy Button -->
-                    <Button Style="{StaticResource MoodButtonStyle}"
-                            Background="{StaticResource SleepyBrush}"
-                            Command="{Binding SelectMoodCommand}"
-                            CommandParameter="Sleepy"
-                            IsEnabled="{Binding CanSelectMood}">
-                        <StackPanel>
-                            <TextBlock Text="&#128564;" FontSize="32" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Sleepy" Margin="0,5,0,0" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
+            <Button Style="{StaticResource MoodButtonStyle}"
+                    Background="{Binding VeryBusyBackground}"
+                    BorderBrush="{Binding VeryBusyBorder}"
+                    BorderThickness="{Binding VeryBusyBorderThickness}"
+                    Command="{Binding SelectMoodCommand}"
+                    CommandParameter="VeryBusy"
+                    IsEnabled="{Binding CanSelectMood}">
+                <StackPanel>
+                    <TextBlock Text="&#129489;&#8205;&#128187;" FontSize="40" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Very Busy" Margin="0,8,0,0" HorizontalAlignment="Center"/>
                 </StackPanel>
+            </Button>
 
-                <!-- Confirmation Message -->
-                <StackPanel VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            Visibility="{Binding ShowConfirmation, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <TextBlock Text="&#10004;" FontSize="48" Foreground="#4CAF50" HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding ConfirmationMessage}"
-                               FontSize="16"
-                               TextWrapping="Wrap"
-                               TextAlignment="Center"
-                               Foreground="#424242"
-                               Margin="20,10,20,0"
-                               MaxWidth="500"/>
+            <Button Style="{StaticResource MoodButtonStyle}"
+                    Background="{Binding PositiveEnergyBackground}"
+                    BorderBrush="{Binding PositiveEnergyBorder}"
+                    BorderThickness="{Binding PositiveEnergyBorderThickness}"
+                    Command="{Binding SelectMoodCommand}"
+                    CommandParameter="PositiveEnergy"
+                    IsEnabled="{Binding CanSelectMood}">
+                <StackPanel>
+                    <TextBlock Text="&#9889;" FontSize="40" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Positive Energy" Margin="0,8,0,0" HorizontalAlignment="Center" FontSize="11"/>
                 </StackPanel>
+            </Button>
 
-                <!-- Loading Indicator -->
-                <StackPanel VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <ProgressBar IsIndeterminate="True" Width="100" Height="4"/>
-                    <TextBlock Text="Submitting..." FontSize="14" Foreground="#757575" Margin="0,10,0,0"/>
+            <Button Style="{StaticResource MoodButtonStyle}"
+                    Background="{Binding NotInMoodBackground}"
+                    BorderBrush="{Binding NotInMoodBorder}"
+                    BorderThickness="{Binding NotInMoodBorderThickness}"
+                    Command="{Binding SelectMoodCommand}"
+                    CommandParameter="NotInMood"
+                    IsEnabled="{Binding CanSelectMood}">
+                <StackPanel>
+                    <TextBlock Text="&#128532;" FontSize="40" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Not in Mood" Margin="0,8,0,0" HorizontalAlignment="Center"/>
                 </StackPanel>
+            </Button>
 
-                <!-- Offline Indicator -->
-                <Border VerticalAlignment="Bottom"
-                        HorizontalAlignment="Center"
-                        Background="#FFF3E0"
-                        CornerRadius="5"
-                        Padding="10,5"
-                        Margin="0,0,0,10"
-                        Visibility="{Binding IsOffline, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <TextBlock Text="Offline - Your response will be saved and synced later"
-                               FontSize="11"
-                               Foreground="#E65100"/>
-                </Border>
-            </Grid>
+            <Button Style="{StaticResource MoodButtonStyle}"
+                    Background="{Binding HungryBackground}"
+                    BorderBrush="{Binding HungryBorder}"
+                    BorderThickness="{Binding HungryBorderThickness}"
+                    Command="{Binding SelectMoodCommand}"
+                    CommandParameter="Hungry"
+                    IsEnabled="{Binding CanSelectMood}">
+                <StackPanel>
+                    <TextBlock Text="&#127828;" FontSize="40" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Hungry" Margin="0,8,0,0" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
 
-            <!-- Footer -->
-            <Border Grid.Row="4" Background="#FAFAFA" CornerRadius="0,0,15,15">
-                <TextBlock Text="{Binding UserInfo}"
-                           FontSize="11"
-                           Foreground="#9E9E9E"
-                           Margin="15,8"
-                           HorizontalAlignment="Left"/>
-            </Border>
-        </Grid>
-    </Border>
+            <Button Style="{StaticResource MoodButtonStyle}"
+                    Background="{Binding GrumpyBackground}"
+                    BorderBrush="{Binding GrumpyBorder}"
+                    BorderThickness="{Binding GrumpyBorderThickness}"
+                    Command="{Binding SelectMoodCommand}"
+                    CommandParameter="Grumpy"
+                    IsEnabled="{Binding CanSelectMood}">
+                <StackPanel>
+                    <TextBlock Text="&#129314;" FontSize="40" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Grumpy" Margin="0,8,0,0" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource MoodButtonStyle}"
+                    Background="{Binding SleepyBackground}"
+                    BorderBrush="{Binding SleepyBorder}"
+                    BorderThickness="{Binding SleepyBorderThickness}"
+                    Command="{Binding SelectMoodCommand}"
+                    CommandParameter="Sleepy"
+                    IsEnabled="{Binding CanSelectMood}">
+                <StackPanel>
+                    <TextBlock Text="&#128564;" FontSize="40" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Sleepy" Margin="0,8,0,0" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <!-- Action Buttons -->
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,25,0,15"
+                    Visibility="{Binding ShowMoodButtons, Converter={StaticResource BoolToVisibilityConverter}}">
+
+            <Button Style="{StaticResource ActionButtonStyle}"
+                    Background="#2196F3"
+                    Content="Save and Close"
+                    Command="{Binding SaveAndCloseCommand}"
+                    IsEnabled="{Binding HasSelectedMood}"
+                    Margin="0,0,15,0"/>
+
+            <Button Style="{StaticResource ActionButtonStyle}"
+                    Background="#EF5350"
+                    Content="Clear"
+                    Command="{Binding ClearSelectionCommand}"
+                    IsEnabled="{Binding HasSelectedMood}"/>
+        </StackPanel>
+
+        <!-- Selected Mood Display -->
+        <StackPanel Grid.Row="5"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding HasSelectedMood, Converter={StaticResource BoolToVisibilityConverter}}">
+            <TextBlock Text="Selected: " FontSize="14" Foreground="#757575" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding SelectedMoodDisplay}" FontSize="14" FontWeight="SemiBold" Foreground="#212121" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding SelectedMoodEmoji}" FontSize="16" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Confirmation Message -->
+        <StackPanel Grid.Row="6"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding ShowConfirmation, Converter={StaticResource BoolToVisibilityConverter}}">
+            <TextBlock Text="&#10004;" FontSize="48" Foreground="#4CAF50" HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding ConfirmationMessage}"
+                       FontSize="16" TextWrapping="Wrap" TextAlignment="Center"
+                       Foreground="#424242" Margin="20,10,20,0" MaxWidth="500"/>
+        </StackPanel>
+
+        <!-- Loading Indicator -->
+        <StackPanel Grid.Row="6"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+            <ProgressBar IsIndeterminate="True" Width="100" Height="4"/>
+            <TextBlock Text="Saving..." FontSize="14" Foreground="#757575" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
 </Window>
