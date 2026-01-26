@@ -52,6 +52,9 @@
 
     <!-- CommunityToolkit for MVVM -->
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+
+    <!-- Color Emoji support for WPF -->
+    <PackageReference Include="Emoji.Wpf" Version="0.3.4" />
   </ItemGroup>
 
   <ItemGroup>
